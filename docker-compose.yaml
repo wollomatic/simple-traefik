@@ -3,6 +3,7 @@
 
 services:
 
+  # traefik container
   traefik:
     image: traefik:2.5.3 # before using set to current version
     restart: unless-stopped
@@ -36,6 +37,23 @@ services:
     ports:
       - "80:80"
       - "443:443"
+
+  # whoami example container
+  whoami:
+    image: containous/whoami:latest
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.whoami.entrypoints=web-secure"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.example.invalid`)" # change hostname!
+      - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.routers.whoami.tls.certresolver=tlschallenge"
+      - "traefik.http.routers.whoami.middlewares=secHeaders@file"
+      - "traefik.http.services.whoami.loadbalancer.server.port=80" # set port the container listenes to
+    networks:
+      - traefik-servicenet
+
+
 
 networks:
   traefik-servicenet:
