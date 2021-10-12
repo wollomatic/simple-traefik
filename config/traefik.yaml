@@ -1,3 +1,4 @@
+---
 # accessLog: {}  # uncomment this line to enable access log
 log:
   level: WARN  # ERROR, DEBUG, PANIC, FATAL, ERROR, WARN, INFO
@@ -14,6 +15,11 @@ api:
 entryPoints:
   web:
     address: ':80' # http
+    http:
+      redirections:
+        entryPoint:
+          to: web-secure
+          scheme: https      
   web-secure:
     address: ':443' # https
 certificatesResolvers:
