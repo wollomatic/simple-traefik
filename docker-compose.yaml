@@ -1,0 +1,44 @@
+# compose spec doesn't need a version anymore,
+# see https://github.com/compose-spec/compose-spec/blob/master/spec.md
+
+services:
+
+  traefik:
+    image: traefik:2.5.3 # before using set to current version
+    restart: unless-stopped
+    depends_on:
+      - dockerproxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./config/traefik.yaml:/etc/traefik/traefik.yaml:ro
+      - ./config/dynamic.yaml:/etc/traefik/dynamic.yaml:ro
+      - ./config/acme.json:/etc/traefik/acme.json
+    labels:
+      - "traefik.enable=true"
+
+      # define basic auth middleware for dashboard
+      - "traefik.http.middlewares.traefik-auth.basicauth.removeheader=true"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=foobar:$$2y$$05$$z2KwKI.GmZ43BbwfmPPKw.CSl3rqQ0OhzBbdom.orfsMVKGLW/Xeu" # CHANGE PASSWORD!! (user: foobar / pwd: foobar)
+      # how to set a real password:
+      # sudo apt-get install apache2-utils
+      # htpasswd -Bnb username password | sed -e s/\\$/\\$\\$/g
+
+      # define traefik dashboard router and service
+      - "traefik.http.routers.traefik.rule=Host(`foobar.example.invalid`)" # change hostname!
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.tls.certresolver=tlschallenge"
+      - "traefik.http.routers.traefik.entrypoints=web-secure"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth, secHeaders@file"
+      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+
+    networks:
+      - traefik-servicenet
+    ports:
+      - "80:80"
+      - "443:443"
+
+networks:
+  traefik-servicenet:
+    external: true
+    name: traefik-servicenet # create this network before running this deployment:
+                             # docker network create traefik-servicenet

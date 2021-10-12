@@ -1,0 +1,53 @@
+---
+# set more secure TLS options,
+# see https://doc.traefik.io/traefik/v2.5/https/tls/
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+      cipherSuites:
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+        - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+        - TLS_AES_128_GCM_SHA256
+        - TLS_AES_256_GCM_SHA384
+        - TLS_CHACHA20_POLY1305_SHA256
+      curvePreferences:
+        - CurveP521
+        - CurveP384
+
+http:
+  # define middlewares
+  middlewares:
+
+    # define some security header options,
+    # see https://doc.traefik.io/traefik/v2.5/middlewares/http/headers/
+    secHeaders:
+      headers:
+        browserXssFilter: true
+        contentTypeNosniff: true
+        frameDeny: true
+        stsIncludeSubdomains: true
+        stsPreload: true
+        stsSeconds: 31536000
+        customFrameOptionsValue: "SAMEORIGIN"
+        customResponseHeaders:
+          # prevent some applications to expose too much information by removing thise headers:
+          server: ""
+          x-powered-by: ""
+
+    # http redirection middleware
+    # see https://doc.traefik.io/traefik/v2.5/middlewares/http/redirectscheme/
+    redirect-to-https:
+      redirectscheme:
+        scheme: https
+        permanent: true
+
+  # define routers
+  routers:
+    # set catchall to http (web / port 80) entrypoint
+    http-catchall:
+      rule: hostregexp(`{host:.+}`)
+      entrypoints: web
+      middlewares: redirect-to-https
+      service: noop@internal
