@@ -7,8 +7,6 @@ services:
   traefik:
     image: traefik:2.5 # please check version tag to use the most current version
     restart: unless-stopped
-    depends_on:
-      - dockerproxy
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./config/traefik.yaml:/etc/traefik/traefik.yaml:ro
