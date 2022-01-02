@@ -5,7 +5,7 @@ services:
 
   # traefik container
   traefik:
-    image: traefik:2.5.3 # before using set to current version
+    image: traefik:2.5 # please check version tag to use the most current version
     restart: unless-stopped
     depends_on:
       - dockerproxy
