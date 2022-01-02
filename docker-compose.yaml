@@ -8,10 +8,10 @@ services:
     image: traefik:2.5 # please check version tag to use the most current version
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./config/traefik.yaml:/etc/traefik/traefik.yaml:ro
-      - ./config/dynamic.yaml:/etc/traefik/dynamic.yaml:ro
-      - ./config/acme.json:/etc/traefik/acme.json
+      - /var/run/docker.sock:/var/run/docker.sock:ro        # It's not recommended mounting the docker socket into a container -> see https://github.com/wollomatic/traefik2-hardened
+      - ./config/traefik.yaml:/etc/traefik/traefik.yaml:ro  # static traefik configuration
+      - ./config/dynamic.yaml:/etc/traefik/dynamic.yaml:ro  # dynamic traefik configuration
+      - ./config/acme.json:/etc/traefik/acme.json           # TLS certificate storage
     labels:
       - "traefik.enable=true"
 
