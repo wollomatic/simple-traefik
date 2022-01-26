@@ -1,4 +1,4 @@
-# simple traefik v2.5 deployment with docker compose example
+# simple traefik v2.6 deployment with docker compose example
 
 This example runs traefik as root with the docker socket mounted into the container to keep this example simple.
 Doing this is not a good security practise. Be warned and know what you do!
