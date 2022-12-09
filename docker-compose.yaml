@@ -28,7 +28,7 @@ services:
       - "traefik.http.routers.traefik.service=api@internal"
       - "traefik.http.routers.traefik.tls.certresolver=tlschallenge"
       - "traefik.http.routers.traefik.entrypoints=web-secure"
-      - "traefik.http.routers.traefik.middlewares=traefik-auth, secHeaders@file"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth, secHeaders@file, autodetectContenttype@file"
       - "traefik.http.services.traefik.loadbalancer.server.port=8080"
 
     networks:
