@@ -5,7 +5,8 @@ services:
 
   # traefik container
   traefik:
-    image: traefik:2.9 # please check version tag to use the most current version
+    image: traefik:v3.0.0-beta2 # still in beta, use v2.9.6 for stable version
+                                # please check version tag to use the most current version
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro        # It's not recommended mounting the docker socket into a container -> see https://github.com/wollomatic/traefik2-hardened
