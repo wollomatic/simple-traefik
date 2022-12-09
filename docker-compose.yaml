@@ -39,7 +39,7 @@ services:
 
   # whoami example container
   whoami:
-    image: containous/whoami:latest
+    image: traefik/whoami:latest
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
