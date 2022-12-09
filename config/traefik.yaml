@@ -31,6 +31,4 @@ certificatesResolvers:
       tlsChallenge: {}
 global:
   checkNewVersion: true
-  sendAnonymousUsage: true
-# pilot:
-#   token: foobar
+  sendAnonymousUsage: true # disable this if you don't want to send anonymous usage data to traefik
