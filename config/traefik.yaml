@@ -22,10 +22,6 @@ entryPoints:
           scheme: https      
   web-secure:
     address: ':443' # https
-    transport:
-      respondingTimeouts:
-        tcp:
-          lingeringTimeout: 30
 certificatesResolvers:
   tlschallenge:
     acme:
